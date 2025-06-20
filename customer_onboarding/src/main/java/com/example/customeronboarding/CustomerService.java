@@ -15,7 +15,7 @@ public class CustomerService {
     @Transactional
     public Customer onboardCustomer(Customer customer) {
         // Critical business logic: check for duplicate email
-        if (customerRepository.findAll().stream().anyMatch(c -> c.getEmail().equalsIgnoreCase(customer.getEmail()))) {
+        if (customerRepository.findByEmail(customer.getEmail()).isPresent()) {
             throw new IllegalArgumentException("Email already exists");
         }
         // Age eligibility check
