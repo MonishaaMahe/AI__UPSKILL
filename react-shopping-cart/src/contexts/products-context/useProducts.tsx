@@ -22,27 +22,28 @@ const useProducts = () => {
     });
   }, [setIsFetching, setProducts]);
 
-  const filterProducts = (filters: string[]) => {
+  const filterProducts = useCallback((filters: string[]) => {
     setIsFetching(true);
 
     getProducts().then((products: IProduct[]) => {
       setIsFetching(false);
       let filteredProducts;
+      console.time('filterProducts');
 
       if (filters && filters.length > 0) {
+        const filterSet = new Set(filters);
         filteredProducts = products.filter((p: IProduct) =>
-          filters.find((filter: string) =>
-            p.availableSizes.find((size: string) => size === filter)
-          )
+          p.availableSizes.some((size: string) => filterSet.has(size))
         );
       } else {
         filteredProducts = products;
       }
 
+      console.timeEnd('filterProducts');
       setFilters(filters);
       setProducts(filteredProducts);
     });
-  };
+  }, [setIsFetching, setFilters, setProducts]);
 
   return {
     isFetching,
