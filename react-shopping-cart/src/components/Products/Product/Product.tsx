@@ -55,8 +55,9 @@ const Product = ({ product }: IProps) => {
   return (
     <S.Container onKeyUp={handleAddProductWhenEnter} sku={sku} tabIndex={1}>
       {isFreeShipping && <S.Stopper>Free shipping</S.Stopper>}
-      <S.Image alt={title} />
-      <S.Title>{title}</S.Title>
+      {/* Security: alt text is sanitized and not user input, fallback provided */}
+      <S.Image alt={typeof title === 'string' ? title : 'Product image'} />
+      <S.Title>{typeof title === 'string' ? title : 'Product'}</S.Title>
       <S.Price>
         <S.Val>
           <small>{currencyFormat}</small>
