@@ -1,0 +1,32 @@
+# Java
+*.class
+*.jar
+*.war
+*.ear
+
+# Maven
+/target/
+
+# Gradle
+/build/
+.gradle/
+
+# IDEs
+/.idea/
+*.iml
+*.ipr
+*.iws
+/.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Docker
+**/logs/
+**/tmp/
+**/.env
+
+# Others
+node_modules/
+.env 
