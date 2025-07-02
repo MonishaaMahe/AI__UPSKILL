@@ -11,6 +11,11 @@ spring:
           uri: http://user-service:8081
           predicates:
             - Path=/users/**
+          filters:
+            - name: CircuitBreaker
+              args:
+                name: userServiceCircuitBreaker
+                fallbackUri: forward:/fallback/users
         - id: course-service
           uri: http://course-service:8082
           predicates:
@@ -27,3 +32,36 @@ spring:
           uri: http://notification-service:8085
           predicates:
             - Path=/notifications/** 
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "*"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+  endpoint:
+    prometheus:
+      enabled: true
+
+resilience4j:
+  circuitbreaker:
+    instances:
+      userServiceCircuitBreaker:
+        registerHealthIndicator: true
+        slidingWindowSize: 10
+        minimumNumberOfCalls: 5
+        permittedNumberOfCallsInHalfOpenState: 3
+        waitDurationInOpenState: 10s
+        failureRateThreshold: 50
+        eventConsumerBufferSize: 10
+
+spring:
+  sleuth:
+    sampler:
+      probability: 1.0
+
+# Fallback endpoint example
+# You need to implement a fallback controller for /fallback/users 
